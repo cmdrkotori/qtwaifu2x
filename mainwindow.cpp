@@ -136,7 +136,7 @@ void MainWindow::on_renderStart_clicked()
     args << "--model_dir" << modelDir;
     waifu->setArguments(args);
     consoleLog("Program arguments:\n\t");
-    consoleLog(args.join(" << "));
+    consoleLog(args.join(" "));
 
     connect(waifu, &QProcess::readyRead,
             this, &MainWindow::waifu_readyRead);
