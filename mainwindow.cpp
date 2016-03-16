@@ -1,5 +1,6 @@
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QStandardPaths>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -120,6 +121,11 @@ void MainWindow::on_renderStart_clicked()
         outputFile.append(".png");
     }
     args << "-o" << outputFile;
+    QString modelDir = ui->modelFolder->text();
+    if (modelDir.isEmpty()) {
+        modelDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models";
+    }
+    args << "--model_dir" << modelDir;
     waifu->setArguments(args);
     consoleLog("Program arguments:\n\t");
     consoleLog(args.join(" << "));
