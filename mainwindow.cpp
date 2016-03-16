@@ -121,7 +121,10 @@ void MainWindow::waifu_readyRead()
 
 void MainWindow::waifu_finished(int exitCode, QProcess::ExitStatus status)
 {
-    delete waifu;
+    if (!waifu)
+        return;
+
+    waifu->deleteLater();
     waifu = NULL;
 }
 
