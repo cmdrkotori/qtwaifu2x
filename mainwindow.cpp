@@ -115,9 +115,9 @@ void MainWindow::on_renderStart_clicked()
         QFileInfo qfi(ui->inputFile->text());
         outputFile = qfi.dir().absolutePath() + "/" + qfi.completeBaseName() + "_waifu2x";
         if (noiseLevel > 0)
-            outputFile.append(QString("noise%1").arg(noiseLevel));
+            outputFile.append(QString("_noise%1").arg(noiseLevel));
         if (scaleRatio > 1.0)
-            outputFile.append(QString("scale%2").arg(QString::number(scaleRatio, 'f', 3)));
+            outputFile.append(QString("_scale%2").arg(QString::number(scaleRatio, 'f', 3)));
         outputFile.append(".png");
     }
     args << "-o" << outputFile;
