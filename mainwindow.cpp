@@ -117,6 +117,10 @@ void MainWindow::on_renderStart_clicked()
 void MainWindow::waifu_readyRead()
 {
     QString data = QString::fromUtf8(waifu->readAll());
+    QTextCursor qtc = ui->console->textCursor();
+    qtc.movePosition(QTextCursor::End);
+    qtc.insertText(data);
+    ui->console->setTextCursor(qtc);
 }
 
 void MainWindow::waifu_finished(int exitCode, QProcess::ExitStatus status)
