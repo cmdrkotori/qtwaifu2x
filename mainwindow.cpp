@@ -133,6 +133,8 @@ void MainWindow::on_renderStart_clicked()
     if (modelDir.isEmpty()) {
         modelDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models";
     }
+    while (modelDir.endsWith("/"))
+        modelDir.chop(1);
     args << "--model_dir" << modelDir;
     waifu->setArguments(args);
     consoleLog("Program arguments:\n\t");
