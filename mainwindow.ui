@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>600</width>
     <height>656</height>
    </rect>
   </property>
@@ -98,6 +98,9 @@
             <string>Scale
 
 Upscaling is a O(n^2), meaning that each doubling of the resolution will take four times as long.</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
            </property>
            <property name="minimum">
             <double>1.000000000000000</double>
@@ -252,7 +255,6 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
