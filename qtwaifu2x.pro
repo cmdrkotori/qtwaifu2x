@@ -22,3 +22,6 @@ FORMS    += mainwindow.ui
 DISTFILES += \
     .gitignore \
     README.md
+
+RESOURCES += \
+    resources.qrc
