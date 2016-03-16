@@ -92,6 +92,8 @@ void MainWindow::on_renderStart_clicked()
     else
         waifu = new QProcess(this);
 
+    ui->console->clear();
+
     waifu->setProgram("waifu2x-converter-cpp");
 
     QStringList args;
@@ -140,7 +142,7 @@ void MainWindow::on_renderStart_clicked()
             this, &MainWindow::waifu_readyRead);
     connect(waifu, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(waifu_finished(int,QProcess::ExitStatus)));
-    consoleLog("\nLaunching waifu2x\n");
+    consoleLog("\n\nLaunching waifu2x\n\n");
     waifu->start();
     setRunningState(true);
 }
