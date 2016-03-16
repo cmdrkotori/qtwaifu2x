@@ -20,6 +20,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::consoleLog(QString text)
+{
+    QTextCursor qtc = ui->console->textCursor();
+    qtc.movePosition(QTextCursor::End);
+    qtc.insertText(text);
+    ui->console->setTextCursor(qtc);
+}
+
 void MainWindow::on_inputBrowse_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
@@ -88,7 +96,8 @@ void MainWindow::on_renderStart_clicked()
     if (ui->noise->isChecked())
         noiseLevel = ui->noiseValue->value();
     args << "--scale_ratio" << QString::number(scaleRatio, 'f', 3);
-    args << "--noise_level" << QString::number(noiseLevel);
+    if (noiseLevel > 0)
+        args << "--noise_level" << QString::number(noiseLevel);
     args << "-m";
     if (noiseLevel > 0) {
         if (scaleRatio > 1.0)
@@ -112,26 +121,30 @@ void MainWindow::on_renderStart_clicked()
     }
     args << "-o" << outputFile;
     waifu->setArguments(args);
+    consoleLog("Program arguments:\n\t");
+    consoleLog(args.join(" << "));
 
     connect(waifu, &QProcess::readyRead,
             this, &MainWindow::waifu_readyRead);
     connect(waifu, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(waifu_finished(int,QProcess::ExitStatus)));
+    consoleLog("\nLaunching waifu2x\n");
+    waifu->start();
 }
 
 void MainWindow::waifu_readyRead()
 {
-    QString data = QString::fromUtf8(waifu->readAll());
-    QTextCursor qtc = ui->console->textCursor();
-    qtc.movePosition(QTextCursor::End);
-    qtc.insertText(data);
-    ui->console->setTextCursor(qtc);
+    consoleLog(QString::fromUtf8(waifu->readAll()));
 }
 
 void MainWindow::waifu_finished(int exitCode, QProcess::ExitStatus status)
 {
     if (!waifu)
         return;
+
+    consoleLog(QString::fromUtf8(waifu->readAllStandardError()));
+    consoleLog(QString("\nerror code: %1\n"
+                "status: %2").arg(exitCode).arg(status));
 
     waifu->deleteLater();
     waifu = NULL;

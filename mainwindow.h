@@ -16,6 +16,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private:
+    void consoleLog(QString text);
+
 private slots:
     void on_inputBrowse_clicked();
 
