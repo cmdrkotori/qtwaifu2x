@@ -242,11 +242,7 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QTextEdit" name="console">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
+        <widget class="QPlainTextEdit" name="console"/>
        </item>
       </layout>
      </widget>
