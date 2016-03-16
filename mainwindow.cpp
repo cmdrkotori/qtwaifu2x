@@ -42,3 +42,24 @@ void MainWindow::on_outputTemplate_toggled(bool checked)
     ui->outputFile->setEnabled(!checked);
     ui->outputBrowse->setEnabled(!checked);
 }
+
+void MainWindow::on_scaleCustom_toggled(bool checked)
+{
+    ui->scaleValue->setEnabled(checked);
+}
+
+void MainWindow::on_noise_toggled(bool checked)
+{
+    ui->noiseValue->setEnabled(checked);
+}
+
+void MainWindow::on_modelBrowse_clicked()
+{
+    QString folderName = QFileDialog::getExistingDirectory(
+                this, tr("Model Folder"), QString(), "PNG Image (*.png)");
+
+    if (folderName.isNull())
+        return;
+
+    ui->modelFolder->setText(folderName);
+}
