@@ -34,6 +34,8 @@ private slots:
     void waifu_readyRead();
     void waifu_finished(int exitCode, QProcess::ExitStatus status);
 
+    void on_renderStop_clicked();
+
 private:
     Ui::MainWindow *ui;
     QProcess *waifu;

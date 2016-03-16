@@ -124,3 +124,12 @@ void MainWindow::waifu_finished(int exitCode, QProcess::ExitStatus status)
     delete waifu;
     waifu = NULL;
 }
+
+void MainWindow::on_renderStop_clicked()
+{
+    if (!waifu)
+        return;
+
+    waifu->deleteLater();
+    waifu = NULL;
+}
