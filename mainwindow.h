@@ -18,6 +18,7 @@ public:
 
 private:
     void consoleLog(QString text);
+    void setRunningState(bool running);
 
 private slots:
     void on_inputBrowse_clicked();

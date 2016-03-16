@@ -29,6 +29,12 @@ void MainWindow::consoleLog(QString text)
     ui->console->setTextCursor(qtc);
 }
 
+void MainWindow::setRunningState(bool running)
+{
+    ui->renderStart->setEnabled(!running);
+    ui->renderStop->setEnabled(running);
+}
+
 void MainWindow::on_inputBrowse_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
@@ -136,6 +142,7 @@ void MainWindow::on_renderStart_clicked()
             this, SLOT(waifu_finished(int,QProcess::ExitStatus)));
     consoleLog("\nLaunching waifu2x\n");
     waifu->start();
+    setRunningState(true);
 }
 
 void MainWindow::waifu_readyRead()
@@ -154,6 +161,8 @@ void MainWindow::waifu_finished(int exitCode, QProcess::ExitStatus status)
 
     waifu->deleteLater();
     waifu = NULL;
+
+    setRunningState(false);
 }
 
 void MainWindow::on_renderStop_clicked()

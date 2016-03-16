@@ -212,6 +212,9 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
          </item>
          <item>
           <widget class="QPushButton" name="renderStop">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Stop</string>
            </property>
