@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>623</height>
+    <height>656</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -176,7 +176,7 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Note: Models trained from use with waifu2x can be obtained from &lt;a href=&quot;https://github.com/nagadomi/waifu2x/&quot;&gt;the waifu2x library git repo&lt;/a&gt;  under the models/ folder.</string>
+            <string>Note: Models trained from use with waifu2x can be obtained from &lt;a href=&quot;https://github.com/nagadomi/waifu2x/&quot;&gt;the waifu2x library git repo&lt;/a&gt;  under the models/ or models_rgb/ folder.</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
