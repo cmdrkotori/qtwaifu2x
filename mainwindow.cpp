@@ -1,16 +1,22 @@
 #include <QFileDialog>
+#include <QFileInfo>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    waifu(NULL)
 {
     ui->setupUi(this);
 }
 
 MainWindow::~MainWindow()
 {
+    if (waifu) {
+        delete waifu;
+        waifu = NULL;
+    }
     delete ui;
 }
 
@@ -56,10 +62,65 @@ void MainWindow::on_noise_toggled(bool checked)
 void MainWindow::on_modelBrowse_clicked()
 {
     QString folderName = QFileDialog::getExistingDirectory(
-                this, tr("Model Folder"), QString(), "PNG Image (*.png)");
+                this, tr("Model Folder"));
 
     if (folderName.isNull())
         return;
 
     ui->modelFolder->setText(folderName);
+}
+
+void MainWindow::on_renderStart_clicked()
+{
+    if (waifu)
+        return;
+    else
+        waifu = new QProcess(this);
+
+    waifu->setProgram("waifu2x-converter-cpp");
+
+    QStringList args;
+    double scaleRatio = 2.0;
+    int noiseLevel = 0;
+    args << "--force-OpenCL";
+    if (ui->scaleCustom->isChecked())
+        scaleRatio = ui->scaleValue->value();
+    if (ui->noise->isChecked())
+        noiseLevel = ui->noiseValue->value();
+    args << "--scale_ratio" << QString::number(scaleRatio, 'f', 3);
+    args << "--noise_level" << QString::number(noiseLevel);
+    args << "-m";
+    if (noiseLevel > 0) {
+        if (scaleRatio > 1.0)
+            args << "noise_scale";
+        else
+            args << "noise";
+    } else {
+        args << "scale";
+    }
+    args << "-i" << ui->inputFile->text();
+    QString outputFile;
+    if (ui->outputTemplate->isChecked()
+            || (outputFile = ui->outputFile->text()).isEmpty()) {
+        QFileInfo qfi(ui->inputFile->text());
+        outputFile = qfi.dir().absolutePath() + "/" + qfi.completeBaseName() + ".png";
+    }
+    args << "-o" << outputFile;
+    waifu->setArguments(args);
+
+    connect(waifu, &QProcess::readyRead,
+            this, &MainWindow::waifu_readyRead);
+    connect(waifu, SIGNAL(finished(int,QProcess::ExitStatus)),
+            this, SLOT(waifu_finished(int,QProcess::ExitStatus)));
+}
+
+void MainWindow::waifu_readyRead()
+{
+    QString data = QString::fromUtf8(waifu->readAll());
+}
+
+void MainWindow::waifu_finished(int exitCode, QProcess::ExitStatus status)
+{
+    delete waifu;
+    waifu = NULL;
 }
