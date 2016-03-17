@@ -10,6 +10,9 @@
     <height>656</height>
    </rect>
   </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Qt Waifu 2x</string>
   </property>

@@ -1,3 +1,4 @@
+#include <QMimeData>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QStandardPaths>
@@ -19,6 +20,18 @@ MainWindow::~MainWindow()
         waifu = NULL;
     }
     delete ui;
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+        event->accept();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    if (event->mimeData()->hasUrls())
+        ui->inputFile->setText(event->mimeData()->urls().first().toLocalFile());
 }
 
 void MainWindow::consoleLog(QString text)

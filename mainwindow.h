@@ -16,6 +16,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    virtual void dropEvent(QDropEvent* event);
+
 private:
     void consoleLog(QString text);
     void setRunningState(bool running);
