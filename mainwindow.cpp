@@ -112,7 +112,8 @@ void MainWindow::on_renderStart_clicked()
     QStringList args;
     double scaleRatio = 2.0;
     int noiseLevel = 0;
-    args << "--force-OpenCL";
+    if (ui->forceOpenCL->isChecked())
+        args << "--force-OpenCL";
     if (ui->scaleCustom->isChecked())
         scaleRatio = ui->scaleValue->value();
     if (ui->noise->isChecked())

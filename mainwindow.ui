@@ -89,14 +89,14 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
-         <item row="0" column="0">
+         <item row="1" column="0">
           <widget class="QCheckBox" name="scaleCustom">
            <property name="text">
             <string>Custom scale</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
+         <item row="1" column="1">
           <widget class="QDoubleSpinBox" name="scaleValue">
            <property name="enabled">
             <bool>false</bool>
@@ -120,14 +120,14 @@ Upscaling is a O(n^2), meaning that each doubling of the resolution will take fo
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QCheckBox" name="noise">
            <property name="text">
             <string>Noise level</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="QSpinBox" name="noiseValue">
            <property name="enabled">
             <bool>false</bool>
@@ -152,14 +152,14 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Model Folder</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="1">
+         <item row="3" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QLineEdit" name="modelFolder">
@@ -177,7 +177,7 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
            </item>
           </layout>
          </item>
-         <item row="3" column="0" colspan="2">
+         <item row="4" column="0" colspan="2">
           <widget class="QLabel" name="label_2">
            <property name="sizePolicy">
             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
@@ -193,6 +193,16 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
            </property>
            <property name="openExternalLinks">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="2">
+          <widget class="QCheckBox" name="forceOpenCL">
+           <property name="toolTip">
+            <string>May be useful for intel chipsets</string>
+           </property>
+           <property name="text">
+            <string>Force OpenCL</string>
            </property>
           </widget>
          </item>
