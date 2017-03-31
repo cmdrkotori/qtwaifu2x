@@ -1,6 +1,7 @@
 #include <QMimeData>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QDir>
 #include <QStandardPaths>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -11,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     waifu(NULL)
 {
     ui->setupUi(this);
+    setupModelDirFallback();
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +34,18 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->hasUrls())
         ui->inputFile->setText(event->mimeData()->urls().first().toLocalFile());
+}
+
+void MainWindow::setupModelDirFallback()
+{
+    static const char usrShareFolder[] = "/usr/share/waifu2x-converter-cpp";
+
+    if (QDir(usrShareFolder).exists()) {
+        modelDirFallback = usrShareFolder;
+        ui->modelFolder->setPlaceholderText(usrShareFolder);
+    } else {
+        modelDirFallback = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models";
+    }
 }
 
 void MainWindow::consoleLog(QString text)
@@ -144,9 +158,8 @@ void MainWindow::on_renderStart_clicked()
     }
     args << "-o" << outputFile;
     QString modelDir = ui->modelFolder->text();
-    if (modelDir.isEmpty()) {
-        modelDir = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models";
-    }
+    if (modelDir.isEmpty())
+        modelDir = modelDirFallback;
     while (modelDir.endsWith("/"))
         modelDir.chop(1);
     args << "--model_dir" << modelDir;

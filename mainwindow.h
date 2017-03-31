@@ -21,6 +21,7 @@ protected:
     virtual void dropEvent(QDropEvent* event);
 
 private:
+    void setupModelDirFallback();
     void consoleLog(QString text);
     void setRunningState(bool running);
 
@@ -47,6 +48,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QProcess *waifu;
+    QString modelDirFallback;
 };
 
 #endif // MAINWINDOW_H
