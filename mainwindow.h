@@ -21,8 +21,13 @@ protected:
     virtual void dropEvent(QDropEvent* event);
 
 private:
-    void setupModelDirFallback();
+    bool setExecutable(const QString &folder);
+    bool setModelFolder(const QString &folder);
+    void checkFolders();
+    QStringList processors();
+    //void setupModelDirFallback();
     void consoleLog(QString text);
+
     void setRunningState(bool running);
 
 private slots:
@@ -36,6 +41,7 @@ private slots:
 
     void on_noise_toggled(bool checked);
 
+    void on_executableBrowse_clicked();
     void on_modelBrowse_clicked();
 
     void on_renderStart_clicked();
@@ -48,7 +54,9 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QProcess *waifu;
-    QString modelDirFallback;
+    //QString modelDirFallback;
+    QString executable;
+    QString modelFolder;
 };
 
 #endif // MAINWINDOW_H

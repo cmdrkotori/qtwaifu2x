@@ -12,7 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     waifu(NULL)
 {
     ui->setupUi(this);
-    setupModelDirFallback();
+    connect(ui->modelFolder, &QLineEdit::textEdited,
+            this, &MainWindow::checkFolders);
+    connect(ui->executable, &QLineEdit::textEdited,
+            this, &MainWindow::checkFolders);
+
+    checkFolders();
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +41,84 @@ void MainWindow::dropEvent(QDropEvent *event)
         ui->inputFile->setText(event->mimeData()->urls().first().toLocalFile());
 }
 
+bool MainWindow::setExecutable(const QString &folder)
+{
+    QStringList candidates;
+    if (!folder.isEmpty())
+        candidates << folder + "/waifu2x-converter-cpp";
+    else
+        candidates << "./waifu2x-converter-cpp"
+                   << "/usr/local/bin/waifu2x-converter-cpp"
+                   << QStandardPaths::findExecutable("waifu2x-converter-cpp");
+
+    for (const QString &binary : candidates) {
+        executable = binary;
+        if (QFileInfo(executable).isExecutable())
+            return true;
+    }
+    executable.clear();
+    return false;
+}
+
+bool MainWindow::setModelFolder(const QString &folder)
+{
+    QStringList candidates;
+    if (!folder.isEmpty()) {
+        candidates << folder;
+    } else {
+        candidates << QFileInfo(executable).dir().path() + "/models_rgb"
+                   << QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models_rgb"
+                   << QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x"
+                   << "/usr/local/share/waifu2x-converter-cpp"
+                   << "/usr/share/waifu2x-converter-cpp";
+    }
+
+    for (const QString &baseFolder : candidates) {
+        modelFolder = baseFolder;
+        if (!modelFolder.isEmpty() && QDir(modelFolder).exists())
+            return true;
+    }
+    modelFolder.clear();
+    return false;
+}
+
+void MainWindow::checkFolders()
+{
+    bool exec = setExecutable(ui->executable->text());
+    bool models = setModelFolder(ui->modelFolder->text());
+    static const char badStyle[] = "background: #ba8a8a; color: black;";
+    ui->executable->setStyleSheet(exec ? "" : badStyle);
+    ui->modelFolder->setStyleSheet(models ? "" : badStyle);
+    QStringList processors;
+    if (exec && models)
+        processors << "Autodetect" << this->processors();
+    else
+        processors << "Executable or OpenCL not found";
+    int oldIndex = ui->processor->currentIndex();
+    ui->processor->clear();
+    ui->processor->addItems(processors);
+    ui->processor->setCurrentIndex(oldIndex);
+}
+
+QStringList MainWindow::processors()
+{
+    QProcess p;
+    p.setProgram(executable);
+    p.setArguments({"--list-processor"});
+    p.start();
+    p.waitForFinished();
+    QString processOutput = QString::fromLocal8Bit(p.readAll());
+    QStringList lines = processOutput.split('\n', QString::SkipEmptyParts);
+    QStringList out;
+    for (QString &line : lines) {
+        line = line.trimmed();
+        if (line.count() && line.at(0).isNumber())
+            out << line;
+    }
+    return out;
+}
+
+/*
 void MainWindow::setupModelDirFallback()
 {
     static const char usrShareFolder[] = "/usr/share/waifu2x-converter-cpp";
@@ -47,7 +130,7 @@ void MainWindow::setupModelDirFallback()
         modelDirFallback = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models";
     }
 }
-
+*/
 void MainWindow::consoleLog(QString text)
 {
     QTextCursor qtc = ui->console->textCursor();
@@ -101,6 +184,18 @@ void MainWindow::on_noise_toggled(bool checked)
     ui->noiseValue->setEnabled(checked);
 }
 
+void MainWindow::on_executableBrowse_clicked()
+{
+    QString folderName = QFileDialog::getExistingDirectory(
+                this, tr("Executable Folder"));
+
+    if (folderName.isNull())
+        return;
+
+    ui->executable->setText(folderName);
+    checkFolders();
+}
+
 void MainWindow::on_modelBrowse_clicked()
 {
     QString folderName = QFileDialog::getExistingDirectory(
@@ -110,6 +205,7 @@ void MainWindow::on_modelBrowse_clicked()
         return;
 
     ui->modelFolder->setText(folderName);
+    checkFolders();
 }
 
 void MainWindow::on_renderStart_clicked()
@@ -121,7 +217,7 @@ void MainWindow::on_renderStart_clicked()
 
     ui->console->clear();
 
-    waifu->setProgram("waifu2x-converter-cpp");
+    waifu->setProgram(executable);
 
     QStringList args;
     double scaleRatio = 2.0;
@@ -157,12 +253,9 @@ void MainWindow::on_renderStart_clicked()
         outputFile.append(".png");
     }
     args << "-o" << outputFile;
-    QString modelDir = ui->modelFolder->text();
-    if (modelDir.isEmpty())
-        modelDir = modelDirFallback;
-    while (modelDir.endsWith("/"))
-        modelDir.chop(1);
-    args << "--model_dir" << modelDir;
+    args << "--model_dir" << modelFolder;
+    if (ui->processor->currentIndex() > 0)
+        args << "--processor" << QString::number(ui->processor->currentIndex()-1);
     waifu->setArguments(args);
     consoleLog("Program arguments:\n\t");
     consoleLog(args.join(" "));
