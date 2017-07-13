@@ -118,19 +118,7 @@ QStringList MainWindow::processors()
     return out;
 }
 
-/*
-void MainWindow::setupModelDirFallback()
-{
-    static const char usrShareFolder[] = "/usr/share/waifu2x-converter-cpp";
 
-    if (QDir(usrShareFolder).exists()) {
-        modelDirFallback = usrShareFolder;
-        ui->modelFolder->setPlaceholderText(usrShareFolder);
-    } else {
-        modelDirFallback = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models";
-    }
-}
-*/
 void MainWindow::consoleLog(QString text)
 {
     QTextCursor qtc = ui->console->textCursor();

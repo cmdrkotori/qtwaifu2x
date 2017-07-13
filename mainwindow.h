@@ -25,7 +25,6 @@ private:
     bool setModelFolder(const QString &folder);
     void checkFolders();
     QStringList processors();
-    //void setupModelDirFallback();
     void consoleLog(QString text);
 
     void setRunningState(bool running);
@@ -50,7 +49,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QProcess *waifu;
-    //QString modelDirFallback;
     QString executable;
     QString modelFolder;
 };
