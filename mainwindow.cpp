@@ -220,14 +220,10 @@ void MainWindow::on_renderStart_clicked()
     waifu->setProgram(executable);
 
     QStringList args;
-    double scaleRatio = 2.0;
-    int noiseLevel = 0;
+    double scaleRatio = ui->scaleValue->value();;
+    int noiseLevel = ui->noiseValue->value();
     if (ui->forceOpenCL->isChecked())
         args << "--force-OpenCL";
-    if (ui->scaleCustom->isChecked())
-        scaleRatio = ui->scaleValue->value();
-    if (ui->noise->isChecked())
-        noiseLevel = ui->noiseValue->value();
     args << "--scale_ratio" << QString::number(scaleRatio, 'f', 3);
     if (noiseLevel > 0)
         args << "--noise_level" << QString::number(noiseLevel);
