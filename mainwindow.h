@@ -37,10 +37,6 @@ private slots:
 
     void on_outputTemplate_toggled(bool checked);
 
-    void on_scaleCustom_toggled(bool checked);
-
-    void on_noise_toggled(bool checked);
-
     void on_executableBrowse_clicked();
     void on_modelBrowse_clicked();
 

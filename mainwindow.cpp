@@ -174,16 +174,6 @@ void MainWindow::on_outputTemplate_toggled(bool checked)
     ui->outputBrowse->setEnabled(!checked);
 }
 
-void MainWindow::on_scaleCustom_toggled(bool checked)
-{
-    ui->scaleValue->setEnabled(checked);
-}
-
-void MainWindow::on_noise_toggled(bool checked)
-{
-    ui->noiseValue->setEnabled(checked);
-}
-
 void MainWindow::on_executableBrowse_clicked()
 {
     QString folderName = QFileDialog::getExistingDirectory(
