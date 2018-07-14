@@ -219,7 +219,7 @@
        <item row="0" column="1">
         <widget class="QDoubleSpinBox" name="scaleValue">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -256,7 +256,7 @@ Upscaling is a O(n^2), meaning that each doubling of the resolution will take fo
        <item row="1" column="1">
         <widget class="QSpinBox" name="noiseValue">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -280,7 +280,7 @@ Low quality jpeg, grain, ringing, and/or blocking</string>
           <number>0</number>
          </property>
          <property name="maximum">
-          <number>2</number>
+          <number>3</number>
          </property>
          <property name="value">
           <number>0</number>
