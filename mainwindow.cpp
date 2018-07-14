@@ -219,12 +219,14 @@ void MainWindow::on_renderStart_clicked()
     if (ui->outputTemplate->isChecked()
             || (outputFile = ui->outputFile->text()).isEmpty()) {
         QFileInfo qfi(ui->inputFile->text());
-        outputFile = qfi.dir().absolutePath() + "/" + qfi.completeBaseName() + "_waifu2x";
+        QString suffix = "_waifu2x";
         if (noiseLevel > 0)
-            outputFile.append(QString("_noise%1").arg(noiseLevel));
+            suffix.append(QString("_noise%1").arg(noiseLevel));
         if (scaleRatio > 1.0)
-            outputFile.append(QString("_scale%2").arg(QString::number(scaleRatio, 'f', 3)));
-        outputFile.append(".png");
+            suffix.append(QString("_scale%2").arg(QString::number(scaleRatio, 'f', 3)));
+        suffix.append(".png");
+        QString trimmedFileName = qfi.completeBaseName().left(255-suffix.length());
+        outputFile = qfi.dir().absolutePath() + "/" + trimmedFileName + suffix;
     }
     args << "-o" << outputFile;
     args << "--model_dir" << modelFolder;
