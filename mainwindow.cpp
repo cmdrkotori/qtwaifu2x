@@ -202,9 +202,9 @@ void MainWindow::on_renderStart_clicked()
     int noiseLevel = ui->noiseValue->value();
     if (ui->forceOpenCL->isChecked())
         args << "--force-OpenCL";
-    args << "--scale_ratio" << QString::number(scaleRatio, 'f', 3);
+    args << "--scale-ratio" << QString::number(scaleRatio, 'f', 3);
     if (noiseLevel > 0)
-        args << "--noise_level" << QString::number(noiseLevel);
+        args << "--noise-level" << QString::number(noiseLevel);
     args << "-m";
     if (noiseLevel > 0) {
         if (scaleRatio > 1.0)
@@ -229,7 +229,7 @@ void MainWindow::on_renderStart_clicked()
         outputFile = qfi.dir().absolutePath() + "/" + trimmedFileName + suffix;
     }
     args << "-o" << outputFile;
-    args << "--model_dir" << modelFolder;
+    args << "--model-dir" << modelFolder;
     if (ui->processor->currentIndex() > 0)
         args << "--processor" << QString::number(ui->processor->currentIndex()-1);
     waifu->setArguments(args);
