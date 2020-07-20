@@ -208,7 +208,7 @@ void MainWindow::on_renderStart_clicked()
     args << "-m";
     if (noiseLevel > 0) {
         if (scaleRatio > 1.0)
-            args << "noise_scale";
+            args << "noise-scale";
         else
             args << "noise";
     } else {
