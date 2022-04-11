@@ -30,6 +30,7 @@ private:
     QStringList processors();
 
     void setRunningState(RunningState state);
+    bool renderNext();
 
 private slots:
     void consoleLog(QString text);
@@ -51,6 +52,8 @@ private slots:
     void on_filesExport_clicked();
     void on_filesRemove_clicked();
     void on_filesClear_clicked();
+
+    void on_checkBox_clicked(bool checked);
 
 private:
     Ui::MainWindow *ui;

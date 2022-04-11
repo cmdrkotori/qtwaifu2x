@@ -10,7 +10,8 @@ class WaifuProcess : public QObject
 public:
     explicit WaifuProcess(QObject *parent = nullptr);
     ~WaifuProcess();
-    void start(QString inputFile, double scale, int noise, QString executable, QString modelFolder, bool forceOpenCL, int processor);
+    void setIgnoreExisting(bool ignore);
+    bool start(QString inputFile, double scale, int noise, QString executable, QString modelFolder, bool forceOpenCL, int processor);
     void stop();
     bool isRunning();
 
@@ -26,6 +27,7 @@ private slots:
 
 private:
     QProcess *waifu = nullptr;
+    bool ignoreExisting = false;
 };
 
 #endif // WAIFUPROCESS_H

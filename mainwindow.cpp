@@ -136,6 +136,31 @@ void MainWindow::setRunningState(RunningState state)
     ui->renderStop->setEnabled(state != RunningNothing);
 }
 
+bool MainWindow::renderNext() {
+    if (waifu->isRunning())
+        return false;
+
+    if (ui->filesList->count() < 1) {
+        setRunningState(RunningNothing);
+        return false;
+    }
+
+    if (executable.isEmpty())
+        return false;
+
+    if (modelFolder.isEmpty())
+        return false;
+
+    QString inputFile;
+    inputFile = ui->filesList->item(0)->text();
+    delete ui->filesList->item(0);
+
+    return waifu->start(inputFile, ui->scaleValue->value(),
+                        ui->noiseValue->value(), executable, modelFolder,
+                        ui->forceOpenCL->isChecked(),
+                        ui->processor->currentIndex());
+}
+
 void MainWindow::consoleLog(QString text)
 {
     QTextCursor qtc = ui->console->textCursor();
@@ -195,33 +220,13 @@ void MainWindow::on_modelBrowse_clicked()
 
 void MainWindow::on_renderStartOnce_clicked()
 {
-    if (waifu->isRunning())
-        return;
-
-    if (ui->filesList->count() < 1)
-        return;
-
-    if (executable.isEmpty())
-        return;
-
-    if (modelFolder.isEmpty())
-        return;
-
-    QString inputFile;
-    inputFile = ui->filesList->item(0)->text();
-    delete ui->filesList->item(0);
-
-    waifu->start(inputFile, ui->scaleValue->value(), ui->noiseValue->value(),
-                 executable, modelFolder, ui->forceOpenCL->isChecked(),
-                 ui->processor->currentIndex());
-
-    setRunningState(RunningOnce);
+    if (renderNext())
+        setRunningState(RunningOnce);
 }
-
 void MainWindow::on_renderStartAll_clicked()
 {
-    on_renderStartOnce_clicked();
-    setRunningState(RunningAll);
+    if (renderNext())
+        setRunningState(RunningAll);
 }
 
 void MainWindow::waifu_preparing()
@@ -239,9 +244,6 @@ void MainWindow::waifu_finished()
 
 void MainWindow::on_renderStop_clicked()
 {
-    if (!waifu)
-        return;
-
     waifu->stop();
     // rely on waifu_finished to set next running state
 }
@@ -273,5 +275,10 @@ void MainWindow::on_filesRemove_clicked()
 void MainWindow::on_filesClear_clicked()
 {
     ui->filesList->clear();
+}
+
+void MainWindow::on_checkBox_clicked(bool checked)
+{
+    waifu->setIgnoreExisting(checked);
 }
 

@@ -16,10 +16,15 @@ WaifuProcess::~WaifuProcess()
     }
 }
 
-void WaifuProcess::start(QString inputFile, double scale, int noise, QString executable, QString modelFolder, bool forceOpenCL, int processor)
+void WaifuProcess::setIgnoreExisting(bool ignore)
+{
+    ignoreExisting = ignore;
+}
+
+bool WaifuProcess::start(QString inputFile, double scale, int noise, QString executable, QString modelFolder, bool forceOpenCL, int processor)
 {
     if (waifu)
-        return;
+        return false;
 
     emit preparing();
 
@@ -53,6 +58,14 @@ void WaifuProcess::start(QString inputFile, double scale, int noise, QString exe
         QString trimmedFileName = qfi.completeBaseName().left(255-suffix.length());
         outputFile = qfi.dir().absolutePath() + "/" + trimmedFileName + suffix;
     }
+    if (ignoreExisting) {
+        QFileInfo outinfo(outputFile);
+        if (outinfo.exists()) {
+            emit finished();
+            return false;
+        }
+    }
+
     args << "-o" << outputFile;
     args << "--model-dir" << modelFolder;
     if (processor > 0)
@@ -71,6 +84,7 @@ void WaifuProcess::start(QString inputFile, double scale, int noise, QString exe
     emit log("\n\nLaunching waifu2x\n\n");
     waifu->start();
     emit started();
+    return true;
 }
 
 void WaifuProcess::stop()
