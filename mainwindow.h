@@ -41,6 +41,7 @@ private slots:
     void on_modelBrowse_clicked();
 
     void on_renderStartOnce_clicked();
+    void on_renderStartAll_clicked();
 
     void waifu_preparing();
     void waifu_finished();
@@ -56,6 +57,7 @@ private:
     WaifuProcess *waifu;
     QString executable;
     QString modelFolder;
+    RunningState running = RunningNothing;
 };
 
 #endif // MAINWINDOW_H

@@ -9,6 +9,7 @@ class WaifuProcess : public QObject
     Q_OBJECT
 public:
     explicit WaifuProcess(QObject *parent = nullptr);
+    ~WaifuProcess();
     void start(QString inputFile, double scale, int noise, QString executable, QString modelFolder, bool forceOpenCL, int processor);
     void stop();
     bool isRunning();

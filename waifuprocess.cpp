@@ -8,6 +8,14 @@ WaifuProcess::WaifuProcess(QObject *parent)
 
 }
 
+WaifuProcess::~WaifuProcess()
+{
+    if (waifu) {
+        delete waifu;
+        waifu = nullptr;
+    }
+}
+
 void WaifuProcess::start(QString inputFile, double scale, int noise, QString executable, QString modelFolder, bool forceOpenCL, int processor)
 {
     if (waifu)
