@@ -147,6 +147,20 @@ void MainWindow::on_inputBrowse_clicked()
     ui->filesList->addItem(fileName);
 }
 
+void MainWindow::on_inputFolders_clicked()
+{
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Open Folder"),
+                                                        QString());
+
+    if (dirName.isNull())
+        return;
+
+    QDir d(dirName);
+    d.setNameFilters({"*.jpg", "*.jpeg", "*.png"});
+    for (const auto &fileInfo : d.entryInfoList())
+        ui->filesList->addItem(fileInfo.absoluteFilePath());
+}
+
 void MainWindow::on_executableBrowse_clicked()
 {
     QString folderName = QFileDialog::getExistingDirectory(
@@ -263,3 +277,33 @@ void MainWindow::on_renderStop_clicked()
     waifu->deleteLater();
     waifu = NULL;
 }
+
+
+void MainWindow::on_filesExport_clicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File List"));
+    if (fileName.isNull())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+
+    QStringList list;
+    for (int i = 0; i < ui->filesList->count(); ++i) {
+        list.append(ui->filesList->item(i)->text());
+    }
+    file.write(list.join('\n').toUtf8());
+}
+
+void MainWindow::on_filesRemove_clicked()
+{
+    if (ui->filesList->currentRow() >= 0)
+        ui->filesList->removeItemWidget(ui->filesList->currentItem());
+}
+
+void MainWindow::on_filesClear_clicked()
+{
+    ui->filesList->clear();
+}
+

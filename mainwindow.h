@@ -33,6 +33,7 @@ private:
 
 private slots:
     void on_inputBrowse_clicked();
+    void on_inputFolders_clicked();
 
     void on_executableBrowse_clicked();
     void on_modelBrowse_clicked();
@@ -43,6 +44,10 @@ private slots:
     void waifu_finished(int exitCode, QProcess::ExitStatus status);
 
     void on_renderStop_clicked();
+
+    void on_filesExport_clicked();
+    void on_filesRemove_clicked();
+    void on_filesClear_clicked();
 
 private:
     Ui::MainWindow *ui;
