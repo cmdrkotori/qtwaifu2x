@@ -25,7 +25,7 @@ private slots:
     void waifu_finished(int exitCode, QProcess::ExitStatus status);
 
 private:
-    QProcess *waifu;
+    QProcess *waifu = nullptr;
 };
 
 #endif // WAIFUPROCESS_H
