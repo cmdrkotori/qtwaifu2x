@@ -78,7 +78,6 @@ bool MainWindow::setModelFolder(const QString &folder)
     } else {
         candidates << QFileInfo(executable).dir().path() + "/models_rgb"
                    << QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x/models_rgb"
-                   << QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.waifu2x"
                    << "/usr/local/share/waifu2x-converter-cpp"
                    << "/usr/share/waifu2x-converter-cpp";
     }
