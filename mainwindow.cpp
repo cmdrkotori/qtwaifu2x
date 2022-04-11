@@ -146,13 +146,13 @@ void MainWindow::consoleLog(QString text)
 
 void MainWindow::on_inputBrowse_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                    QString(),
-                                                    "Images (*.png *.jpg)");
-    if (fileName.isNull())
+    QStringList fileNames = QFileDialog::getOpenFileNames(this,
+        tr("Open File"), QString(), "Images (*.png *.jpg)");
+    if (fileNames.isEmpty())
         return;
 
-    ui->filesList->addItem(fileName);
+    for (const auto &fileName : fileNames)
+        ui->filesList->addItem(fileName);
 }
 
 void MainWindow::on_inputFolders_clicked()
