@@ -37,6 +37,7 @@ private slots:
 
     void on_inputBrowse_clicked();
     void on_inputFolders_clicked();
+    void on_inputList_clicked();
 
     void on_executableBrowse_clicked();
     void on_modelBrowse_clicked();

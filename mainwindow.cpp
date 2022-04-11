@@ -194,6 +194,21 @@ void MainWindow::on_inputFolders_clicked()
         ui->filesList->addItem(fileInfo.absoluteFilePath());
 }
 
+
+void MainWindow::on_inputList_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"));
+    if (fileName.isNull())
+        return;
+
+    QFile f(fileName);
+    if (!f.open(QFile::ReadOnly | QFile::Text))
+        return;
+    QTextStream s(&f);
+    ui->filesList->addItems(s.readAll().split('\n', QString::SkipEmptyParts));
+
+}
+
 void MainWindow::on_executableBrowse_clicked()
 {
     QString folderName = QFileDialog::getExistingDirectory(
@@ -281,4 +296,3 @@ void MainWindow::on_checkBox_clicked(bool checked)
 {
     waifu->setIgnoreExisting(checked);
 }
-
