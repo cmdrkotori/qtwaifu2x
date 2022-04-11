@@ -210,7 +210,7 @@ void MainWindow::on_renderStartOnce_clicked()
 
     QString inputFile;
     inputFile = ui->filesList->item(0)->text();
-    ui->filesList->removeItemWidget(ui->filesList->item(0));
+    delete ui->filesList->item(0);
 
     waifu->start(inputFile, ui->scaleValue->value(), ui->noiseValue->value(),
                  executable, modelFolder, ui->forceOpenCL->isChecked(),
@@ -268,7 +268,7 @@ void MainWindow::on_filesExport_clicked()
 void MainWindow::on_filesRemove_clicked()
 {
     if (ui->filesList->currentRow() >= 0)
-        ui->filesList->removeItemWidget(ui->filesList->currentItem());
+        delete ui->filesList->currentItem();
 }
 
 void MainWindow::on_filesClear_clicked()
