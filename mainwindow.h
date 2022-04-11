@@ -12,6 +12,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    enum RunningState { RunningNothing, RunningOnce, RunningAll };
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -27,19 +29,15 @@ private:
     QStringList processors();
     void consoleLog(QString text);
 
-    void setRunningState(bool running);
+    void setRunningState(RunningState state);
 
 private slots:
     void on_inputBrowse_clicked();
 
-    void on_outputBrowse_clicked();
-
-    void on_outputTemplate_toggled(bool checked);
-
     void on_executableBrowse_clicked();
     void on_modelBrowse_clicked();
 
-    void on_renderStart_clicked();
+    void on_renderStartOnce_clicked();
 
     void waifu_readyRead();
     void waifu_finished(int exitCode, QProcess::ExitStatus status);

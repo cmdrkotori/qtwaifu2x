@@ -37,8 +37,10 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
-    if (event->mimeData()->hasUrls())
-        ui->inputFile->setText(event->mimeData()->urls().first().toLocalFile());
+    if (event->mimeData()->hasUrls()) {
+        for (auto url : event->mimeData()->urls())
+            ui->filesList->addItem(url.toLocalFile());
+    }
 }
 
 bool MainWindow::setExecutable(const QString &folder)
@@ -127,10 +129,11 @@ void MainWindow::consoleLog(QString text)
     ui->console->setTextCursor(qtc);
 }
 
-void MainWindow::setRunningState(bool running)
+void MainWindow::setRunningState(RunningState state)
 {
-    ui->renderStart->setEnabled(!running);
-    ui->renderStop->setEnabled(running);
+    ui->renderStartOnce->setEnabled(state == RunningNothing);
+    ui->renderStartAll->setEnabled(state == RunningNothing);
+    ui->renderStop->setEnabled(state != RunningNothing);
 }
 
 void MainWindow::on_inputBrowse_clicked()
@@ -141,25 +144,7 @@ void MainWindow::on_inputBrowse_clicked()
     if (fileName.isNull())
         return;
 
-    ui->inputFile->setText(fileName);
-}
-
-void MainWindow::on_outputBrowse_clicked()
-{
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                    QString(),
-                                                    "PNG Image (*.png)");
-
-    if (fileName.isNull())
-        return;
-
-    ui->outputFile->setText(fileName);
-}
-
-void MainWindow::on_outputTemplate_toggled(bool checked)
-{
-    ui->outputFile->setEnabled(!checked);
-    ui->outputBrowse->setEnabled(!checked);
+    ui->filesList->addItem(fileName);
 }
 
 void MainWindow::on_executableBrowse_clicked()
@@ -186,12 +171,18 @@ void MainWindow::on_modelBrowse_clicked()
     checkFolders();
 }
 
-void MainWindow::on_renderStart_clicked()
+void MainWindow::on_renderStartOnce_clicked()
 {
     if (waifu)
         return;
     else
         waifu = new QProcess(this);
+
+    if (ui->filesList->count() < 1)
+        return;
+    QString inputFile;
+    inputFile = ui->filesList->item(0)->text();
+    ui->filesList->removeItemWidget(ui->filesList->item(0));
 
     ui->console->clear();
 
@@ -214,11 +205,10 @@ void MainWindow::on_renderStart_clicked()
     } else {
         args << "scale";
     }
-    args << "-i" << ui->inputFile->text();
+    args << "-i" << inputFile;
     QString outputFile;
-    if (ui->outputTemplate->isChecked()
-            || (outputFile = ui->outputFile->text()).isEmpty()) {
-        QFileInfo qfi(ui->inputFile->text());
+    if (true) {
+        QFileInfo qfi(inputFile);
         QString suffix = "_waifu2x";
         if (noiseLevel > 0)
             suffix.append(QString("_noise%1").arg(noiseLevel));
@@ -242,7 +232,7 @@ void MainWindow::on_renderStart_clicked()
             this, SLOT(waifu_finished(int,QProcess::ExitStatus)));
     consoleLog("\n\nLaunching waifu2x\n\n");
     waifu->start();
-    setRunningState(true);
+    setRunningState(RunningOnce);
 }
 
 void MainWindow::waifu_readyRead()
@@ -262,7 +252,7 @@ void MainWindow::waifu_finished(int exitCode, QProcess::ExitStatus status)
     waifu->deleteLater();
     waifu = NULL;
 
-    setRunningState(false);
+    setRunningState(RunningNothing);
 }
 
 void MainWindow::on_renderStop_clicked()
