@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QProcess>
+#include "waifuprocess.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,11 +28,12 @@ private:
     bool setModelFolder(const QString &folder);
     void checkFolders();
     QStringList processors();
-    void consoleLog(QString text);
 
     void setRunningState(RunningState state);
 
 private slots:
+    void consoleLog(QString text);
+
     void on_inputBrowse_clicked();
     void on_inputFolders_clicked();
 
@@ -40,8 +42,8 @@ private slots:
 
     void on_renderStartOnce_clicked();
 
-    void waifu_readyRead();
-    void waifu_finished(int exitCode, QProcess::ExitStatus status);
+    void waifu_preparing();
+    void waifu_finished();
 
     void on_renderStop_clicked();
 
@@ -51,7 +53,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QProcess *waifu;
+    WaifuProcess *waifu;
     QString executable;
     QString modelFolder;
 };
