@@ -46,7 +46,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 void MainWindow::dropEvent(QDropEvent *event)
 {
     if (event->mimeData()->hasUrls()) {
-        for (auto url : event->mimeData()->urls())
+        for (const auto &url : event->mimeData()->urls())
             ui->filesList->addItem(url.toLocalFile());
     }
 }
@@ -117,11 +117,11 @@ QStringList MainWindow::processors()
     p.start();
     p.waitForFinished();
     QString processOutput = QString::fromLocal8Bit(p.readAll());
-    QStringList lines = processOutput.split('\n', QString::SkipEmptyParts);
+    QStringList lines = processOutput.split('\n', Qt::SkipEmptyParts);
     QStringList out;
     for (QString &line : lines) {
         line = line.trimmed();
-        if (line.count() && line.at(0).isNumber())
+        if (line.length() && line.at(0).isNumber())
             out << line;
     }
     return out;
@@ -205,7 +205,7 @@ void MainWindow::on_inputList_clicked()
     if (!f.open(QFile::ReadOnly | QFile::Text))
         return;
     QTextStream s(&f);
-    ui->filesList->addItems(s.readAll().split('\n', QString::SkipEmptyParts));
+    ui->filesList->addItems(s.readAll().split('\n', Qt::SkipEmptyParts));
 
 }
 
